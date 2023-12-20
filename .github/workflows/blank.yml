@@ -1,0 +1,67 @@
+# Workflow Name
+name: Testing
+
+on:
+  # Triggers the workflow on push when both conditions (branch & path) match
+  push:
+    branches:
+      - "main-**"
+    paths:
+      - "*/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+#  This workflow contains a single job called "Terraform"
+jobs:
+  terraform:
+    name: "Terraform-Plan"
+
+    # job will run on ubuntu runner
+    runs-on: ubuntu-latest
+
+    # This job has the following steps
+    steps:
+      # Checks-out your repository
+      - name: Checkout
+
+      # Use GIT TOKEN
+      - name: Use GIT TOKEN
+        run: |
+          git config --global url."https://${{secrets.TOKEN}}@github.com".insteadOf "https://github.com"
+
+        
+      # Github Authentication with AWS using AssumeRole
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::962491557115:role/OIDC-ASSUMEROLE-GITHUB-INFRA-CICD-DEVTEST
+          role-session-name: devtest-session
+          aws-region: eu-central-1
+
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.4
+          terraform_wrapper: false
+
+
+      - name: Terraform Init
+        id: init
+        run: |
+          cd $WORKDIR
+          terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: |
+          cd $WORKDIR
+          terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          cd $WORKDIR
+          terraform plan
