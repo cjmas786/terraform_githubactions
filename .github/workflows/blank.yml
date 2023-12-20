@@ -33,7 +33,7 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::962491557115:role/OIDC-ASSUMEROLE-GITHUB-INFRA-CICD-DEVTEST
+          role-to-assume: arn:aws:iam::412710339202:role/githubactionsassumeroletoaws
           role-session-name: devtest-session
           aws-region: eu-central-1
 
