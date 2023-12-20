@@ -1,13 +1,9 @@
 # Workflow Name
 name: Testing
 
-on:
+on:  [push]
   # Triggers the workflow on push when both conditions (branch & path) match
-  push:
-    branches:
-      - "main-**"
-    paths:
-      - "*/**"
+  
 
 permissions:
   id-token: write
